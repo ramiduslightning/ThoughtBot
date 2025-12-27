@@ -1,0 +1,1468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>ThoughtBot v37 (Gemini Golf)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  /* ====== THEME VARIABLES (base: DARK) ====== */
+  :root{
+    --bg: radial-gradient(circle at 30% -10%, #16181f 0%, #0b0d12 55%, #090a0d 100%);
+    --panel: rgba(12,14,18,0.50);
+    --panel-border: rgba(255,255,255,0.06);
+    --right-bg: rgba(6,6,7,0.46);
+    --bot: rgba(255,255,255,0.06);
+    --user: #3a7bff;
+    --text: #ffffff;
+    --hairline: rgba(255,255,255,0.10);
+    --button-fg: #0b0d12;
+    --button-bg: #ffffff;
+    --focus: #e5e7eb; /* light gray ring for dark mode */
+
+    /* Action gradients (DARK THEME) */
+    --grad-teach:  linear-gradient(135deg, #3a7bff 0%, #60a5fa 100%);
+    --grad-forget: linear-gradient(135deg, #ffb347 0%, #ff944d 100%);
+    --grad-export: linear-gradient(135deg, #a78bfa 0%, #c084fc 100%);
+    --grad-import: linear-gradient(135deg, #34d399 0%, #6ee7b7 100%);
+    --grad-upload: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+    /* DARK SEE-BRAIN: darker red */
+    --grad-brain:  linear-gradient(135deg, #b91c1c 0%, #fb7171 100%);
+    --icon-wiggle: wiggle 6s ease-in-out infinite;
+    --title-sway: titleSway 9s ease-in-out infinite;
+  }
+
+  .theme-light{
+    --bg: radial-gradient(circle at 30% -10%, #f6fbff 0%, #eef6ff 55%, #e7f0ff 100%);
+    --panel: rgba(255,255,255,0.90);
+    --panel-border: rgba(0,0,0,0.06);
+    --right-bg: rgba(255,255,255,0.92);
+    --bot: rgba(0,0,0,0.05);
+    --user: #245bff;
+    --text: #0f172a;
+    --hairline: rgba(0,0,0,0.10);
+    --button-fg: #0f172a;
+    --button-bg: #ffffff;
+    --focus: #111827;
+
+    --grad-teach:  linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    --grad-forget: linear-gradient(135deg, #f59e0b 0%, #fdba74 100%);
+    --grad-export: linear-gradient(135deg, #8b5cf6 0%, #d8b4fe 100%);
+    --grad-import: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    --grad-upload: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    /* LIGHT SEE-BRAIN: softer red */
+    --grad-brain:  linear-gradient(135deg, #dc2626 0%, #fecaca 100%);
+  }
+
+  /* He-Man / Gold theme – all 5 buttons same gold gradient */
+  .theme-gold{
+    --bg: radial-gradient(1400px 820px at 20% -10%, #3b2505 0%, #92400e 48%, #1a1306 100%);
+    --panel: rgba(63, 43, 15, 0.75);
+    --panel-border: rgba(255,214,102,0.20);
+    --right-bg: rgba(49, 34, 12, 0.78);
+    --bot: rgba(255,214,102,0.14);
+    --user: #f59e0b;
+    --text: #fff7e3;
+    --hairline: rgba(255,214,102,0.22);
+    --button-fg: #1a1306;
+    --button-bg: #fff7e3;
+    --focus: #fbbf24;
+
+    --grad-teach:  linear-gradient(135deg, #fbbf24 0%, #fde68a 100%);
+    --grad-forget: linear-gradient(135deg, #fbbf24 0%, #fde68a 100%);
+    --grad-export: linear-gradient(135deg, #fbbf24 0%, #fde68a 100%);
+    --grad-import: linear-gradient(135deg, #fbbf24 0%, #fde68a 100%);
+    --grad-upload: linear-gradient(135deg, #fbbf24 0%, #fde68a 100%);
+    --grad-brain:  linear-gradient(135deg, #fbbf24 0%, #fde68a 100%);
+  }
+
+  /* Smurf / Blue theme – all 5 buttons same blue gradient */
+  .theme-blue{
+    --bg: radial-gradient(1400px 820px at 30% -10%, #0f172a 0%, #1d4ed8 50%, #020617 100%);
+    --panel: rgba(30,64,175,0.78);
+    --panel-border: rgba(147,197,253,0.40);
+    --right-bg: rgba(15,23,42,0.86);
+    --bot: rgba(147,197,253,0.18);
+    --user: #3b82f6;
+    --text: #eaf3ff;
+    --hairline: rgba(147,197,253,0.36);
+    --button-fg: #06111d;
+    --button-bg: #eaf3ff;
+    --focus: #60a5fa;
+
+    --grad-teach:  linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    --grad-forget: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    --grad-export: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    --grad-import: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    --grad-upload: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+    --grad-brain:  linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+  }
+
+  /* Turtle / Green theme – all 5 buttons same green gradient */
+  .theme-green{
+    --bg: radial-gradient(1400px 820px at 30% -10%, #022c22 0%, #059669 52%, #022c22 100%);
+    --panel: rgba(6,95,70,0.80);
+    --panel-border: rgba(102,255,170,0.34);
+    --right-bg: rgba(5,46,38,0.88);
+    --bot: rgba(102,255,170,0.20);
+    --user: #22c55e;
+    --text: #eaffe9;
+    --hairline: rgba(102,255,170,0.30);
+    --button-fg: #022c22;
+    --button-bg: #eaffe9;
+    --focus: #22c55e;
+
+    --grad-teach:  linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    --grad-forget: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    --grad-export: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    --grad-import: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    --grad-upload: linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+    --grad-brain:  linear-gradient(135deg, #22c55e 0%, #86efac 100%);
+  }
+
+  /* Strawberry Shortcake / Pink theme – all 5 buttons same pink gradient */
+  .theme-pink{
+    --bg: radial-gradient(1400px 820px at 30% -10%, #4b132f 0%, #be185d 50%, #3b0a2a 100%);
+    --panel: rgba(190,24,93,0.80);
+    --panel-border: rgba(255,180,210,0.38);
+    --right-bg: rgba(131,24,67,0.90);
+    --bot: rgba(255,180,210,0.20);
+    --user: #ec4899;
+    --text: #ffe9f2;
+    --hairline: rgba(255,180,210,0.32);
+    --button-fg: #2a0f1e;
+    --button-bg: #ffe9f2;
+    --focus: #f472b6;
+
+    --grad-teach:  linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%);
+    --grad-forget: linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%);
+    --grad-export: linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%);
+    --grad-import: linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%);
+    --grad-upload: linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%);
+    --grad-brain:  linear-gradient(135deg, #f472b6 0%, #fbcfe8 100%);
+  }
+
+  /* GoBot / Silver theme – flashy silver + white */
+  .theme-gobot{
+    --bg: radial-gradient(1400px 820px at 30% -10%, #0b1015 0%, #3f4b59 35%, #cfd5dd 100%);
+    --panel: rgba(255,255,255,0.85);
+    --panel-border: rgba(148,163,184,0.70);
+    --right-bg: rgba(15,23,42,0.92);
+    --bot: rgba(148,163,184,0.25);
+    --user: #0ea5e9;        /* electric cyan accent */
+    --text: #020617;
+    --hairline: rgba(148,163,184,0.60);
+    --button-fg: #020617;
+    --button-bg: #f9fafb;
+    --focus: #e5e7eb;
+
+    /* UPDATED: all 5 buttons use the same silver gradient */
+    --grad-teach:  linear-gradient(135deg, #e5e7eb 0%, #f9fafb 100%);
+    --grad-forget: linear-gradient(135deg, #e5e7eb 0%, #f9fafb 100%);
+    --grad-export: linear-gradient(135deg, #e5e7eb 0%, #f9fafb 100%);
+    --grad-import: linear-gradient(135deg, #e5e7eb 0%, #f9fafb 100%);
+    --grad-upload: linear-gradient(135deg, #e5e7eb 0%, #f9fafb 100%);
+    --grad-brain:  linear-gradient(135deg, #e5e7eb 0%, #f9fafb 100%);
+  }
+
+  /* ====== LAYOUT ====== */
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  .app{
+    max-width:1150px;
+    margin:0 auto;
+    padding:18px;
+    display:grid;
+    grid-template-columns: 1fr 360px;
+    gap:18px;
+  }
+
+  .left{
+    position:relative;
+    border-radius:26px;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    display:flex;
+    flex-direction:column;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 0 0 1px var(--hairline);
+  }
+  header{
+    padding:14px 16px 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .title-wrap{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .title-text{
+    font-weight:800;
+    font-size:1.9rem;
+    letter-spacing:.01em;
+    animation: var(--title-sway);
+  }
+  .icon{
+    font-size:1.45rem;
+    display:inline-block;
+    animation: var(--icon-wiggle);
+  }
+
+  .toolbar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .btn{
+    appearance:none;
+    border:1px solid var(--hairline);
+    border-radius:12px;
+    padding:8px 12px;
+    font-weight:700;
+    font-size:.86rem;
+    cursor:pointer;
+    background: var(--button-bg);
+    color: var(--button-fg);
+    transition: transform .12s ease, box-shadow .12s ease, border-color .2s ease;
+  }
+
+  /* Theme button: ALWAYS white across all themes */
+  #theme-btn{
+    background: var(--button-bg);
+    color: var(--button-fg);
+    border-color: var(--hairline);
+  }
+
+  .btn:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(0,0,0,.18);
+    border-color: rgba(77,210,255,.30);
+  }
+  .btn:focus-visible{
+    outline:3px solid var(--focus);
+    outline-offset:2px;
+  }
+
+  .chat{
+    flex:1;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:10px 20px 16px;
+  }
+  .msg{
+    max-width:82%;
+    padding:12px 15px;
+    border-radius:16px;
+    line-height:1.55;
+    white-space:pre-wrap;
+    font-size:.98rem;
+    animation: bubbleIn 220ms cubic-bezier(.2,.7,.2,1);
+    box-shadow: 0 6px 14px rgba(0,0,0,.12);
+  }
+  .bot{
+    background: var(--bot);
+    align-self:flex-start;
+  }
+  .user{
+    background: var(--user);
+    align-self:flex-end;
+    border-bottom-right-radius:6px;
+    color:#fff;
+  }
+
+  form{
+    display:flex;
+    gap:10px;
+    padding:12px 16px 4px;
+    border-top:1px solid var(--hairline);
+  }
+  input[type="text"]{
+    flex:1;
+    background: rgba(0,0,0,0.14);
+    border:1px solid var(--hairline);
+    color:var(--text);
+    border-radius:12px;
+    padding:12px 12px;
+    font-size:.96rem;
+    outline:none;
+    caret-color: var(--focus);
+    transition: box-shadow .25s ease, border-color .25s ease, background .25s ease;
+  }
+  /* base placeholder: dark & light keep gray */
+  input[type="text"]::placeholder{
+    color: #9ca3af;
+    opacity: 1;
+  }
+
+  .theme-light  input[type="text"]{
+    background: rgba(0,0,0,0.04);
+  }
+  .theme-light input[type="text"]::placeholder{
+    color:#6b7280;
+  }
+
+  .theme-gold   input[type="text"]{
+    background: rgba(255,255,255,0.06);
+  }
+  .theme-gold input[type="text"]::placeholder{
+    color:#facc15; /* gold */
+  }
+
+  .theme-blue   input[type="text"]{
+    background: rgba(255,255,255,0.10);
+  }
+  .theme-blue input[type="text"]::placeholder{
+    color:#60a5fa; /* smurf blue */
+  }
+
+  .theme-green  input[type="text"]{
+    background: rgba(255,255,255,0.10);
+  }
+  .theme-green input[type="text"]::placeholder{
+    color:#22c55e; /* turtle green */
+  }
+
+  .theme-pink   input[type="text"]{
+    background: rgba(255,255,255,0.12);
+  }
+  .theme-pink input[type="text"]::placeholder{
+    color:#f472b6; /* shortcake pink */
+  }
+
+  .theme-gobot  input[type="text"]{
+    background: rgba(15,23,42,0.10);
+  }
+  .theme-gobot input[type="text"]::placeholder{
+    color:#e5e7eb; /* silvery light */
+  }
+
+  input[type="text"]:focus{
+    border-color: var(--focus);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--focus) 20%, transparent);
+  }
+
+  /* Upload + Remove bar */
+  .upload-bar{
+    padding:0 16px 10px;
+    font-size:.78rem;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .upload-link, .remove-link{
+    background:none;
+    border:none;
+    padding:3px 0;
+    margin:0;
+    font:inherit;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    cursor:pointer;
+    color: var(--focus);
+    opacity:.92;
+  }
+  .upload-link span,
+  .remove-link span{
+    text-decoration:underline;
+    text-underline-offset:2px;
+    font-weight:700;
+  }
+  .upload-link:hover,
+  .remove-link:hover{
+    opacity:1;
+  }
+  .upload-hint{
+    opacity:.8;
+    font-size:.75rem;
+  }
+
+  .footer-quote{
+    font-size:.78rem;
+    text-align:center;
+    padding:0 0 12px;
+    min-height:1.2em;
+    font-weight:700;
+    opacity:.9;
+  }
+
+  /* RIGHT PANEL */
+  .right{
+    position:relative;
+    border-radius:26px;
+    background:var(--right-bg);
+    border:1px solid var(--panel-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,.18), inset 0 0 0 1px var(--hairline);
+    padding:16px;
+    display:block;
+    height:max-content;
+  }
+
+  /* UPDATED: GoBot right panel text made light so it's readable on dark background */
+  .theme-gobot .right{
+    color:#e5e7eb;
+  }
+
+  .about-title{
+    font-weight:800;
+    margin-bottom:6px;
+    font-size:.96rem;
+    letter-spacing:.01em;
+  }
+  .about-body{
+    font-size:.8rem;
+    opacity:.95;
+    line-height:1.4;
+    margin-bottom:10px;
+  }
+
+  .row2{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px;
+  }
+  .gap-sm{ height:10px; }
+  .gap-md{ height:16px; }
+
+  .action{
+    padding:10px 12px;
+    border-radius:12px;
+    border:1px solid var(--hairline);
+    font-weight:900;
+    font-size:.86rem;
+    color: var(--button-fg);
+    box-shadow: 0 6px 12px rgba(0,0,0,.12), inset 0 0 0 1px rgba(255,255,255,.10);
+    cursor:pointer;
+  }
+  .teach-btn  { background: var(--grad-teach); }
+  .forget-btn { background: var(--grad-forget); }
+  .export-btn { background: var(--grad-export); }
+  .import-btn { background: var(--grad-import); }
+  /* See Brain: centered, same style size */
+  .brain-btn  {
+    background: var(--grad-brain);
+    display:block;
+    max-width: 210px;
+    margin: 0 auto;
+    text-align:center;
+  }
+
+  .teach-panel{
+    display:none;
+    border:1px dashed var(--hairline);
+    border-radius:12px;
+    padding:10px;
+    margin-top:10px;
+  }
+  .teach-grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:8px;
+  }
+  .teach-grid label{
+    font-size:.78rem;
+    opacity:.85;
+  }
+  
+  /* UPDATED: Multiline Textarea style for teach inputs */
+  .teach-grid textarea{
+    width:100%;
+    padding:12px 10px;
+    min-height:40px;
+    border-radius:10px;
+    border:1px solid var(--hairline);
+    background: rgba(0,0,0,.06);
+    color:var(--text); /* Default color is theme text (white in dark/color themes) */
+    resize: vertical;
+  }
+  
+  /* UPDATED: GoBot Teach panel inputs need white/silver text on the dark background */
+  .theme-gobot .teach-grid textarea{
+    color: #e5e7eb; /* Silver/white text */
+    background: rgba(255,255,255,0.06); /* Slightly more transparent background for contrast */
+  }
+  
+  .teach-actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .pill{
+    padding:8px 12px;
+    border-radius:999px;
+    border:1px solid var(--hairline);
+    background:var(--button-bg);
+    color:var(--button-fg);
+    font-weight:800;
+    cursor:pointer;
+  }
+  .x-close{ margin-left:auto; }
+
+  .meta{
+    margin-top:10px;
+    font-size:.7rem;
+    opacity:.75;
+  }
+
+  /* Lightning streak for He-Man */
+  .lightning{
+    position:absolute;
+    left:-8%;
+    right:-8%;
+    top:12px;
+    height:0;
+    pointer-events:none;
+    z-index:3;
+    filter: drop-shadow(0 0 10px rgba(255,238,170,.95));
+  }
+  .lightning::before,
+  .lightning::after{
+    content:"";
+    display:block;
+    height:4px;
+    margin:6px 0;
+    background: linear-gradient(90deg, transparent 0%, #fff2a3 12%, #ffe08a 55%, #ffd166 88%, transparent 100%);
+    animation: zap 4200ms ease-out forwards;
+  }
+  .lightning::after{
+    animation-delay: 160ms;
+    opacity:.85;
+    transform: scaleX(.96);
+  }
+
+  /* Full-page gold flare overlay */
+  .gold-flare{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 20% 0%, rgba(252,211,77,0.45) 0%, transparent 55%),
+      radial-gradient(circle at 80% 100%, rgba(251,191,36,0.5) 0%, transparent 60%),
+      radial-gradient(circle at 50% 50%, rgba(248,250,252,0.45) 0%, transparent 65%);
+    mix-blend-mode: screen;
+    opacity:0;
+    animation: goldStorm 5s ease-out forwards;
+    z-index:999;
+  }
+
+  /* Animations */
+  @keyframes bubbleIn{
+    from{ transform: translateY(6px) scale(.98); opacity:0; }
+    to{ transform: translateY(0) scale(1); opacity:1; }
+  }
+  @keyframes titleSway{
+    0%{transform:translateY(0)}
+    40%{transform:translateY(.9px)}
+    80%{transform:translateY(-.9px)}
+    100%{transform:translateY(0)}
+  }
+  @keyframes wiggle{
+    0%{transform:translateY(0) rotate(0)}
+    40%{transform:translateY(-1px) rotate(4deg)}
+    80%{transform:translateY(1px) rotate(-3deg)}
+    100%{transform:translateY(0) rotate(0)}
+  }
+
+  @keyframes zap{
+    0%  { opacity:0; transform:translateY(0) scaleX(.85); }
+    8%  { opacity:1; }
+    18% { opacity:0; }
+    28% { opacity:1; }
+    40% { opacity:0; }
+    55% { opacity:1; }
+    70% { opacity:0; }
+    85% { opacity:1; }
+    100%{ opacity:0; transform:translateY(-8px) scaleX(1.08); }
+  }
+
+  @keyframes goldStorm{
+    0%  { opacity:0; }
+    10% { opacity:1; }
+    25% { opacity:0.35; }
+    45% { opacity:0.9; }
+    65% { opacity:0.25; }
+    80% { opacity:0.7; }
+    100%{ opacity:0; }
+  }
+
+  @media (max-width: 980px){
+    .app{ grid-template-columns: 1fr; }
+    .right{ order:-1; }
+    .msg{ max-width:94%; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+        <div class="left" id="left-card">
+      <header>
+        <div class="title-wrap">
+          <div class="title-text">ThoughtBot</div>
+          <div class="icon" id="title-icon">⚡</div>
+        </div>
+        <div class="toolbar">
+          <button id="theme-btn" class="btn" title="Toggle theme">🌓 Theme</button>
+          <button id="clear-btn" class="btn" title="Clear chat (Ctrl/Cmd + K)">🧹 Clear</button>
+        </div>
+      </header>
+
+      <div id="chat" class="chat"></div>
+
+      <form id="form">
+        <input id="input" type="text" placeholder="Type here..." autocomplete="off" />
+        <button type="submit" class="btn">Send</button>
+      </form>
+
+            <div class="upload-bar">
+        <button id="upload-trigger" type="button" class="upload-link">
+          <span>Upload File</span>
+        </button>
+        <button id="remove-trigger" type="button" class="remove-link">
+          <span>Remove File</span>
+        </button>
+        <div class="upload-hint">
+          Tip: use <strong>search doc: keyword</strong> in chat to find things inside your uploaded text.
+        </div>
+      </div>
+
+      <div id="theme-name" style="text-align:center; font-size:.8rem; opacity:.70; padding-bottom:4px;"></div>
+      <div class="footer-quote" id="footer-quote"></div>
+    </div>
+
+        <aside class="right">
+      <div class="about-title">About ThoughtBot</div>
+      <div class="about-body">
+        I'm here to help make your day easier.<br/>
+        If I don't know something, you can teach me.<br/>
+        I learn as I go.
+      </div>
+
+      <div class="row2">
+        <button class="action teach-btn"  id="open-teach">Teach</button>
+        <button class="action forget-btn" id="open-forget">Forget</button>
+      </div>
+
+      <div class="gap-sm"></div>
+
+      <div id="teach-panel" class="teach-panel" aria-hidden="true">
+        <div class="teach-actions">
+          <strong id="panel-title">Teach</strong>
+          <button id="panel-close" class="pill x-close" title="Close">× Close</button>
+        </div>
+        <div class="teach-grid">
+          <label for="teach-left">Question / Label</label>
+                    <textarea id="teach-left" placeholder="e.g., What color are the owl's eyes?  OR  Owl eyes color"></textarea>
+
+          <div id="answer-wrap">
+            <label for="teach-right">Answer</label>
+                        <textarea id="teach-right" placeholder="e.g., Orange"></textarea>
+          </div>
+
+          <div class="teach-actions">
+            <button id="teach-save" class="pill">Save</button>
+            <button id="forget-save" class="pill" style="display:none;">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gap-sm"></div>
+
+            <button class="action brain-btn" id="see-brain">See Brain</button>
+
+      <div class="gap-md"></div>
+
+      <div class="row2">
+        <button class="action export-btn" id="open-export">Export</button>
+        <button class="action import-btn" id="open-import">Import</button>
+      </div>
+
+      <div class="meta">
+        <div id="storage-status"></div>
+        <div id="memory-count"></div>
+        <div id="doc-meta"></div>
+        <div id="last-import"></div>
+        <div class="version-tag">ThoughtBot v37</div>
+      </div>
+    </aside>
+  </div>
+
+    <input type="file" id="upload-input" style="display:none;" multiple
+         accept=".txt,.md,.csv,.json" />
+
+<script>
+/* =========================
+   Persistent State
+========================= */
+var STORAGE_KEY = "thoughtbot_v31_state";
+function loadState(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  }catch(e){}
+  return {
+    name:null,
+    awaitingName:true,
+    knowledge:{facts:{}},
+    lastImportedAt:null,
+    theme:"dark",
+    documents:[]
+  };
+}
+function saveState(st){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(st)); }catch(e){}
+}
+function normSpaces(t){ return t.replace(/\s+/g," ").trim(); }
+function norm(t){
+  return normSpaces(t.toLowerCase().replace(/[’']/g,"").replace(/[\?\.,:;!]/g," "));
+}
+/* UPDATED: keep final period user types */
+function cleanValue(v){
+  return v.trim();
+}
+var TB_STATE = loadState();
+if (!TB_STATE.documents) TB_STATE.documents = [];
+
+/* Theme order + metadata (added gobot) */
+var THEME_ORDER = ["dark","light","gold","blue","green","pink","gobot"];
+var THEME_META = {
+  dark:  { name:"Dark Mode",  quote:"", icon:"⚡" },
+  light: { name:"Light Mode", quote:"", icon:"⚡" },
+  gold:  { name:"He-Man Mode", quote:"By the power of Grayskull, I have the power!", icon:"🗡️" },
+  blue:  { name:"Smurf Mode",  quote:"This theme is Smurftastic!", icon:"🍄" },
+  green: { name:"Turtle Mode", quote:"Cowabunga dude.", icon:"🐢" },
+  pink:  { name:"Strawberry Shortcake Mode", quote:"If you want a sunny morning, you must give the sun a hand!", icon:"🍓" },
+  gobot: { name:"GoBot Mode", quote:"I won't miss twice.", icon:"🤖" }
+};
+
+/* gold lightning interval handle */
+var goldIntervalId = null;
+
+/* =========================
+   DOM
+========================= */
+var chat = document.getElementById("chat");
+var form = document.getElementById("form");
+var input = document.getElementById("input");
+var clearBtn = document.getElementById("clear-btn");
+var themeBtn = document.getElementById("theme-btn");
+var themeName = document.getElementById("theme-name");
+var footerQuote = document.getElementById("footer-quote");
+var titleIcon = document.getElementById("title-icon");
+var storageStatus = document.getElementById("storage-status");
+var memoryCountEl = document.getElementById("memory-count");
+var lastImportEl = document.getElementById("last-import");
+var docMetaEl = document.getElementById("doc-meta");
+
+/* Right panel widgets */
+var openTeach = document.getElementById("open-teach");
+var openForget = document.getElementById("open-forget");
+var teachPanel = document.getElementById("teach-panel");
+var panelTitle = document.getElementById("panel-title");
+var panelClose = document.getElementById("panel-close");
+// UPDATED: teachLeft/Right are now textareas
+var teachLeft = document.getElementById("teach-left"); 
+var teachRight = document.getElementById("teach-right");
+var answerWrap = document.getElementById("answer-wrap");
+var teachSave = document.getElementById("teach-save");
+var forgetSave = document.getElementById("forget-save");
+var openExport = document.getElementById("open-export");
+var openImport = document.getElementById("open-import");
+var brainBtn   = document.getElementById("see-brain");
+
+/* Upload / Remove widgets */
+var uploadTrigger = document.getElementById("upload-trigger");
+var removeTrigger = document.getElementById("remove-trigger");
+var uploadInput = document.getElementById("upload-input");
+
+/* =========================
+   Chat helpers
+========================= */
+function addMsg(text, who){
+  var div = document.createElement("div");
+  div.className = "msg " + (who || "bot");
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+function countMemory(){
+  return Object.keys(TB_STATE.knowledge.facts).length;
+}
+function updateMeta(){
+  var ok = false;
+  try{
+    localStorage.setItem("__tbt","1");
+    localStorage.removeItem("__tbt");
+    ok = true;
+  }catch(e){}
+  storageStatus.textContent = "Storage: " + (ok ? "localStorage OK" : "cookie only");
+  memoryCountEl.textContent = "Memory: " +
+    countMemory() + " item" + (countMemory()===1?"":"s");
+
+  var docCount = TB_STATE.documents ? TB_STATE.documents.length : 0;
+  docMetaEl.textContent = "Docs: " + docCount + " text file" + (docCount===1?"":"s") + " loaded";
+
+  lastImportEl.textContent = TB_STATE.lastImportedAt ?
+    ("Last import: " + TB_STATE.lastImportedAt) : "";
+}
+
+/* =========================
+   Teach & Forget logic
+========================= */
+function normalizeQuestionToKey(q){
+  var t = norm(q);
+  ["who is ","what is ","whats ","what's ","tell me about ","give me info on "].forEach(function(p){
+    if (t.indexOf(p)===0) t = t.slice(p.length);
+  });
+  return t.trim();
+}
+function canonicalTeachKey(leftRaw){
+  var L = normSpaces(leftRaw.trim());
+  if (/(\s+is|\s+are)$/i.test(L))
+    L = L.replace(/(\s+is|\s+are)$/i,"").trim();
+  return normalizeQuestionToKey(L) || L;
+}
+var STOP = new Set([
+  "a","an","the","of","for","to","in","on","at","and","or",
+  "is","are","am","my","your","our","their","his","her",
+  "what","whats","who","how","when","where","why"
+]);
+function tokens(s){
+  return normalizeQuestionToKey(s)
+    .split(" ")
+    .map(x=>x.trim())
+    .filter(x=>x && !STOP.has(x) && x.length>=2);
+}
+function jaccard(a,b){
+  var A=new Set(a), B=new Set(b);
+  var inter=0;
+  A.forEach(x=>{if(B.has(x)) inter++;});
+  var uni=new Set(a.concat(b)).size;
+  return uni? inter/uni:0;
+}
+function fuzzyLookupKey(query){
+  var qTok = tokens(query);
+  var bestKey=null, best=0;
+  var keys = Object.keys(TB_STATE.knowledge.facts);
+  for (var i=0;i<keys.length;i++){
+    var kTok = tokens(keys[i]);
+    if (!kTok.length) continue;
+    var containsAll = qTok.every(t=>kTok.indexOf(t)!==-1);
+    var score = containsAll ? 1.0 : jaccard(qTok,kTok);
+    if (score>best){ best=score; bestKey=keys[i]; }
+  }
+  return (bestKey && best>=0.4) ? bestKey : null;
+}
+
+/* Name question handling */
+function isNameQuestion(raw){
+  var q = normSpaces(
+    raw.toLowerCase()
+       .replace(/[’']/g,"")
+       .replace(/[\?\.,:;!]/g," ")
+  ).trim();
+  return (
+    q === "what is my name" ||
+    q === "whats my name" ||
+    q === "who am i" ||
+    q === "what s my name"
+  );
+}
+
+function answerFromKnowledge(text){
+  if (isNameQuestion(text)){
+    return TB_STATE.name ?
+      "You told me your name is " + TB_STATE.name + "." :
+      "You haven't told me your name yet.";
+  }
+  var ask = normalizeQuestionToKey(text);
+  if (TB_STATE.knowledge.facts[ask]) return TB_STATE.knowledge.facts[ask];
+
+  var alt = ask.startsWith("the ") ? ask.slice(4) : null;
+  if (alt && TB_STATE.knowledge.facts[alt]) return TB_STATE.knowledge.facts[alt];
+
+  var fk = fuzzyLookupKey(text);
+  return fk ? TB_STATE.knowledge.facts[fk] : null;
+}
+
+/* Panel controls */
+function openPanel(mode){
+  teachPanel.style.display = "block";
+  if (mode==="teach"){
+    panelTitle.textContent = "Teach";
+    answerWrap.style.display = "block";
+    teachSave.style.display = "inline-block";
+    forgetSave.style.display = "none";
+  } else {
+    panelTitle.textContent = "Forget";
+    answerWrap.style.display = "none";
+    teachSave.style.display = "none";
+    forgetSave.style.display = "inline-block";
+  }
+  teachLeft.value = "";
+  teachRight.value = "";
+  teachLeft.focus();
+}
+function closePanel(){
+  teachPanel.style.display = "none";
+}
+
+/* =========================
+   Export / Import
+========================= */
+function exportMemory(){
+  var payload = {
+    exported_at:new Date().toISOString(),
+    source:"ThoughtBot v37",
+    state:TB_STATE
+  };
+  var blob = new Blob([JSON.stringify(payload,null,2)],
+                      {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "thoughtbot_memory_"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  addMsg("📦 Memory exported.","bot");
+}
+function importMemory(){
+  var inputF = document.createElement("input");
+  inputF.type="file";
+  inputF.accept="application/json";
+  inputF.onchange = function(ev){
+    var file = ev.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      try{
+        var data = JSON.parse(e.target.result);
+        if (data && data.state){
+          TB_STATE = data.state;
+          if (!TB_STATE.documents) TB_STATE.documents = [];
+          TB_STATE.lastImportedAt = new Date().toISOString();
+          saveState(TB_STATE);
+          updateMeta();
+          applyTheme();
+          addMsg("✅ Memory imported.","bot");
+        } else {
+          addMsg("I couldn't read that file as ThoughtBot memory.","bot");
+        }
+      }catch(err){
+        addMsg("There was a problem reading that file.","bot");
+      }
+    };
+    reader.readAsText(file);
+  };
+  inputF.click();
+}
+
+/* =========================
+   Theme switching + He-Man lightning
+========================= */
+function setHeaderIcon(theme){
+  var meta = THEME_META[theme] || THEME_META.dark;
+  titleIcon.textContent = meta.icon || "⚡";
+  titleIcon.style.animation = 'var(--icon-wiggle)';
+}
+
+function triggerGoldLightning(){
+  var header = document.querySelector("header");
+  if (header){
+    var bolt = document.createElement("div");
+    bolt.className = "lightning";
+    header.appendChild(bolt);
+    setTimeout(function(){
+      if (bolt.parentNode) header.removeChild(bolt);
+    }, 5000);
+  }
+  var flare = document.createElement("div");
+  flare.className = "gold-flare";
+  document.body.appendChild(flare);
+  setTimeout(function(){
+    if (flare.parentNode) document.body.removeChild(flare);
+  }, 5000);
+}
+
+function applyTheme(){
+  document.body.classList.remove(
+    "theme-light","theme-gold","theme-blue","theme-green","theme-pink","theme-gobot"
+  );
+
+  if (goldIntervalId){
+    clearInterval(goldIntervalId);
+    goldIntervalId = null;
+  }
+
+  var t = TB_STATE.theme;
+  if (t==="light") document.body.classList.add("theme-light");
+  if (t==="gold")  document.body.classList.add("theme-gold");
+  if (t==="blue")  document.body.classList.add("theme-blue");
+  if (t==="green") document.body.classList.add("theme-green");
+  if (t==="pink")  document.body.classList.add("theme-pink");
+  if (t==="gobot") document.body.classList.add("theme-gobot");
+
+  var meta = THEME_META[t] || THEME_META.dark;
+  themeName.textContent = meta.name;
+  footerQuote.textContent = meta.quote || "";
+  setHeaderIcon(t);
+
+  if (t==="gold"){
+    triggerGoldLightning();
+    goldIntervalId = setInterval(function(){
+      if (TB_STATE.theme === "gold"){
+        triggerGoldLightning();
+      } else {
+        clearInterval(goldIntervalId);
+        goldIntervalId = null;
+      }
+    }, 45000);
+  }
+}
+function cycleTheme(){
+  var i = THEME_ORDER.indexOf(TB_STATE.theme);
+  if (i===-1) i=0;
+  TB_STATE.theme = THEME_ORDER[(i+1)%THEME_ORDER.length];
+  saveState(TB_STATE);
+  applyTheme();
+}
+
+/* =========================
+   Name capture + commands
+========================= */
+function tryNameChange(text){
+  var t=text.trim();
+  var low=t.toLowerCase();
+  if (low.startsWith("my name is ")){
+    TB_STATE.name = t.slice(11).trim();
+    TB_STATE.awaitingName=false;
+    saveState(TB_STATE);
+    updateMeta();
+    return "Got it — I'll call you " + TB_STATE.name + ".";
+  }
+  if (low.startsWith("hi my name is ")){
+    TB_STATE.name = t.slice(14).trim();
+    TB_STATE.awaitingName=false;
+    saveState(TB_STATE);
+    updateMeta();
+    return "Nice to meet you, " + TB_STATE.name + "!";
+  }
+  if (low.startsWith("call me ")){
+    TB_STATE.name = t.slice(8).trim();
+    TB_STATE.awaitingName=false;
+    saveState(TB_STATE);
+    updateMeta();
+    return "Okay, I'll call you " + TB_STATE.name + ".";
+  }
+  if (TB_STATE.awaitingName && t.split(" ").length===1 && t.length<=25){
+    TB_STATE.name=t;
+    TB_STATE.awaitingName=false;
+    saveState(TB_STATE);
+    updateMeta();
+    return "Nice to meet you, " + t + "!";
+  }
+  return null;
+}
+
+/* =========================
+   Document upload / remove / search
+========================= */
+var READABLE_EXTS = ["txt","md","csv","json"];
+
+function handleUploadedFile(file){
+  var name = file.name || "document";
+  var ext = (name.split(".").pop() || "").toLowerCase();
+
+  if (READABLE_EXTS.indexOf(ext) === -1){
+    addMsg(
+      "❌ \""+name+"\" is not a file type I can read directly. " +
+      "Try saving it as plain text (.txt) and uploading that version.",
+      "bot"
+    );
+    return;
+  }
+
+  var reader = new FileReader();
+  reader.onload = function(e){
+    var content = e.target.result || "";
+    var trimmed = content.slice(0, 200000);
+    TB_STATE.documents = TB_STATE.documents.filter(function(d){ return d.name !== name; });
+    TB_STATE.documents.push({
+      name:name,
+      type:ext,
+      size:file.size || 0,
+      loadedAt:new Date().toISOString(),
+      content:trimmed
+    });
+    saveState(TB_STATE);
+    updateMeta();
+    addMsg(
+      "📄 I loaded \""+name+"\" ("+content.length+" characters). " +
+      "Use `search doc: keyword` in chat to find things inside it.",
+      "bot"
+    );
+  };
+  reader.readAsText(file);
+}
+
+/* line-based search */
+function searchDocumentsForPhrase(phrase){
+  if (!TB_STATE.documents || !TB_STATE.documents.length){
+    addMsg("I don't have any text documents loaded yet.","bot");
+    return;
+  }
+
+  var needle = phrase.toLowerCase();
+  var hits = [];
+
+  TB_STATE.documents.forEach(function(doc, idx){
+    if (!doc || !doc.content) return;
+    var lines = doc.content.split(/\r?\n/);
+
+    for (var i = 0; i < lines.length; i++){
+      if (lines[i].toLowerCase().indexOf(needle) !== -1){
+        var label = lines[i].trim();
+        var next = "";
+
+        for (var j = i + 1; j < lines.length; j++){
+          if (lines[j].trim()){
+            next = lines[j].trim();
+            break;
+          }
+        }
+
+        var lineText = (idx+1) + ". " + (doc.name || "document") + ": " + label;
+        if (next){
+          lineText += " — " + next;
+        }
+        hits.push(lineText);
+        break;
+      }
+    }
+  });
+
+  if (!hits.length){
+    addMsg("I didn't find that in the text documents I've loaded.","bot");
+  } else {
+    addMsg(
+      "Here are some places I found that phrase:\n" + hits.join("\n"),
+      "bot"
+    );
+  }
+}
+
+function listDocsForPrompt(){
+  if (!TB_STATE.documents || !TB_STATE.documents.length) return null;
+  var lines = TB_STATE.documents.map(function(doc, idx){
+    return (idx+1)+". "+doc.name;
+  });
+  return "Which document do you want to remove?\n" +
+         "Type its number or full name:\n\n" +
+         lines.join("\n");
+}
+
+function removeDocBySpecifier(spec){
+  if (!TB_STATE.documents || !TB_STATE.documents.length){
+    addMsg("I don't have any text documents loaded to remove.","bot");
+    return;
+  }
+  spec = spec.trim();
+  if (!spec) return;
+
+  var numMatch = spec.match(/^#?(\d+)$/);
+  if (numMatch){
+    var idx = parseInt(numMatch[1],10) - 1;
+    if (idx >= 0 && idx < TB_STATE.documents.length){
+      var removed = TB_STATE.documents.splice(idx,1)[0];
+      saveState(TB_STATE);
+      updateMeta();
+      addMsg("🗑 Removed \""+removed.name+"\".","bot");
+    } else {
+      addMsg("I couldn't find a document with that number.","bot");
+    }
+    return;
+  }
+
+  var i = TB_STATE.documents.findIndex(function(doc){
+    return doc.name.toLowerCase() === spec.toLowerCase();
+  });
+  if (i !== -1){
+    var removed2 = TB_STATE.documents.splice(i,1)[0];
+    saveState(TB_STATE);
+    updateMeta();
+    addMsg("🗑 Removed \""+removed2.name+"\".","bot");
+  } else {
+    addMsg("I couldn't find a document with that name.","bot");
+  }
+}
+
+/* =========================
+   See Brain (list learned facts)
+========================= */
+function showBrain(){
+  var facts = TB_STATE.knowledge.facts || {};
+  var keys = Object.keys(facts);
+  if (!keys.length){
+    addMsg(
+      "🧠 My brain is empty right now. You can teach me with the Teach panel or inline, e.g.:\n" +
+      "teach: What is X? = Your answer",
+      "bot"
+    );
+    return;
+  }
+  keys.sort();
+  // UPDATED: Added a newline character to create a gap between taught facts
+  var lines = keys.map(function(k, idx){
+    return (idx+1)+". " + k + " → " + facts[k] + "\n";
+  });
+  addMsg("🧠 Here's what I've been taught so far:\n" + lines.join("\n"), "bot");
+}
+
+/* =========================
+   Main input handling
+========================= */
+function handleUserText(text){
+  var trimmed = text.trim();
+  if (!trimmed) return;
+
+  /* added gobot in theme command */
+  var m = trimmed.toLowerCase().match(/^theme\s*:\s*(dark|light|gold|blue|green|pink|gobot)$/);
+  if (m){
+    TB_STATE.theme = m[1];
+    saveState(TB_STATE);
+    applyTheme();
+    return;
+  }
+
+  if (trimmed.toLowerCase()==="clear" || trimmed.toLowerCase()==="clear chat"){
+    chat.innerHTML="";
+    addMsg("🧹 Chat cleared. How can I assist?","bot");
+    return;
+  }
+
+  if (trimmed.toLowerCase()==="remove all docs"){
+    if (TB_STATE.documents && TB_STATE.documents.length){
+      TB_STATE.documents = [];
+      saveState(TB_STATE);
+      updateMeta();
+      addMsg("🗑 Removed all uploaded text documents.","bot");
+    } else {
+      addMsg("There are no uploaded text documents to remove.","bot");
+    }
+    return;
+  }
+
+  var named = tryNameChange(trimmed);
+  if (named){
+    addMsg(named,"bot");
+    return;
+  }
+
+  var searchMatch = trimmed.match(/^(search doc|search document|find in doc|find in document)\s*:\s*(.+)$/i);
+  if (searchMatch){
+    var phrase = searchMatch[2].trim();
+    if (!phrase){
+      addMsg("Tell me what to look for after the colon, e.g. `search doc: password reset`.","bot");
+      return;
+    }
+    searchDocumentsForPhrase(phrase);
+    return;
+  }
+
+  var removeMatch = trimmed.match(/^remove\s+doc\s*:\s*(.+)$/i);
+  if (removeMatch){
+    var spec = removeMatch[1].trim();
+    if (!spec){
+      addMsg("Tell me which document to remove, e.g. `remove doc: #2` or `remove doc: Outlook Shortcuts.txt`.","bot");
+      return;
+    }
+    removeDocBySpecifier(spec);
+    return;
+  }
+
+  var teachMatch = trimmed.match(/^teach\s*:\s*(.+)$/i);
+  if (teachMatch){
+    var body = teachMatch[1];
+    var eq = body.indexOf("=");
+    if (eq===-1){
+      addMsg(
+        'I saw "teach:", but I also need "=". Example:\n' +
+        'teach: What color are the owl\'s eyes? = Orange',
+        "bot"
+      );
+      return;
+    }
+    var leftRaw = body.slice(0,eq).trim();
+    var rightRaw = cleanValue(body.slice(eq+1).trim());
+    var key = canonicalTeachKey(leftRaw);
+    TB_STATE.knowledge.facts[key] = rightRaw;
+    saveState(TB_STATE);
+    updateMeta();
+    addMsg("👍 Saved.","bot");
+    return;
+  }
+
+  if (trimmed.toLowerCase().startsWith("forget:")){
+    var q = trimmed.slice(7).trim();
+    var key = TB_STATE.knowledge.facts[normalizeQuestionToKey(q)]
+      ? normalizeQuestionToKey(q)
+      : fuzzyLookupKey(q);
+    if (key){
+      delete TB_STATE.knowledge.facts[key];
+      saveState(TB_STATE);
+      updateMeta();
+      addMsg("Removed.","bot");
+    } else {
+      addMsg("Nothing found for that label.","bot");
+    }
+    return;
+  }
+
+  var ans = answerFromKnowledge(trimmed);
+  if (ans){
+    addMsg(ans,"bot");
+    return;
+  }
+
+  var prefix = TB_STATE.name ? (TB_STATE.name + ", ") : "";
+  addMsg("🧠 " + prefix + "I'm still learning. You can teach me that, then ask again.","bot");
+}
+
+/* =========================
+   Init & Events
+========================= */
+function initChat(){
+  applyTheme();
+  updateMeta();
+  if (TB_STATE.name){
+    addMsg("Welcome back, " + TB_STATE.name + ". How can I help today?","bot");
+  } else {
+    addMsg("Hi! I'm ThoughtBot — here to make your day easier. What's your name?","bot");
+  }
+}
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  var val = input.value;
+  input.value = "";
+  addMsg(val,"user");
+  handleUserText(val);
+});
+clearBtn.addEventListener("click", function(){
+  chat.innerHTML="";
+  addMsg("🧹 Chat cleared. How can I assist?","bot");
+  input.focus();
+});
+themeBtn.addEventListener("click", function(){ cycleTheme(); });
+
+openTeach.addEventListener("click", function(){ openPanel("teach"); });
+openForget.addEventListener("click", function(){ openPanel("forget"); });
+panelClose.addEventListener("click", function(){ closePanel(); });
+
+teachSave.addEventListener("click", function(e){
+  e.preventDefault();
+  // Teach inputs are now textareas
+  var L = teachLeft.value.trim();
+  var R = teachRight.value.trim();
+  if (!L || !R){
+    addMsg("Please fill both Question/Label and Answer.","bot");
+    return;
+  }
+  TB_STATE.knowledge.facts[canonicalTeachKey(L)] = cleanValue(R);
+  saveState(TB_STATE);
+  updateMeta();
+  closePanel();
+  addMsg("👍 Saved.","bot");
+});
+forgetSave.addEventListener("click", function(e){
+  e.preventDefault();
+  // Teach input is now a textarea
+  var L = teachLeft.value.trim();
+  if (!L){
+    closePanel();
+    addMsg("Nothing to remove.","bot");
+    return;
+  }
+  var key = TB_STATE.knowledge.facts[normalizeQuestionToKey(L)]
+    ? normalizeQuestionToKey(L)
+    : fuzzyLookupKey(L);
+  if (key){
+    delete TB_STATE.knowledge.facts[key];
+    saveState(TB_STATE);
+    updateMeta();
+    addMsg("Removed.","bot");
+  } else {
+    addMsg("Nothing found for that label.","bot");
+  }
+  closePanel();
+});
+
+brainBtn.addEventListener("click", function(e){
+  e.preventDefault();
+  showBrain();
+});
+
+openExport.addEventListener("click", function(e){
+  e.preventDefault();
+  exportMemory();
+});
+openImport.addEventListener("click", function(e){
+  e.preventDefault();
+  importMemory();
+});
+
+uploadTrigger.addEventListener("click", function(e){
+  e.preventDefault();
+  uploadInput.click();
+});
+uploadInput.addEventListener("change", function(e){
+  var files = Array.from(e.target.files || []);
+  if (!files.length) return;
+  files.forEach(handleUploadedFile);
+  uploadInput.value = "";
+});
+
+removeTrigger.addEventListener("click", function(e){
+  e.preventDefault();
+  if (!TB_STATE.documents || !TB_STATE.documents.length){
+    addMsg("There are no uploaded text documents to remove.","bot");
+    return;
+  }
+  var msg = listDocsForPrompt();
+  var spec = window.prompt(msg || "");
+  if (spec === null) return;
+  spec = spec.trim();
+  if (!spec) return;
+  removeDocBySpecifier(spec);
+});
+
+document.addEventListener("keydown", function(e){
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==="k"){
+    e.preventDefault();
+    chat.innerHTML="";
+    addMsg("🧹 Chat cleared. How can I assist?","bot");
+    input.focus();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==="t"){
+    e.preventDefault();
+    cycleTheme();
+  }
+});
+
+initChat();
+</script>
+</body>
+</html>
+
