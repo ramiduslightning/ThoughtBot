@@ -597,9 +597,161 @@
   }
 
   @media (max-width: 980px){
-    .app{ grid-template-columns: 1fr; }
-    .right{ order:-1; }
-    .msg{ max-width:94%; }
+    /* Mobile: Stack everything vertically with chat in middle */
+    .app{ 
+      grid-template-columns: 1fr; 
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      gap: 0;
+    }
+    
+    /* Header at top */
+    header{
+      padding: 12px 16px;
+    }
+    
+    .title-wrap{
+      margin-bottom: 8px;
+    }
+    
+    .toolbar{
+      gap: 8px;
+    }
+    
+    .btn{
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    
+    /* Chat takes up middle space */
+    .chat{
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+      min-height: 300px;
+    }
+    
+    /* Messages */
+    .msg{ 
+      max-width: 94%;
+      font-size: 14px;
+      padding: 10px 14px;
+    }
+    
+    /* Input form */
+    #form{
+      padding: 12px 16px;
+      gap: 8px;
+    }
+    
+    #input{
+      font-size: 16px; /* Prevents zoom on iOS */
+      padding: 12px;
+    }
+    
+    /* Upload bar */
+    .upload-bar{
+      padding: 8px 16px;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+    }
+    
+    .upload-link, .remove-link{
+      width: 100%;
+      padding: 10px;
+      text-align: center;
+    }
+    
+    .upload-hint{
+      font-size: 11px;
+      text-align: center;
+    }
+    
+    /* Right sidebar - collapse to bottom or hide some parts */
+    .right{
+      order: 3; /* Put at bottom instead of top */
+      padding: 16px;
+      max-height: none;
+    }
+    
+    .about-title{
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    
+    .about-body{
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+    
+    /* Action buttons in row */
+    .row2{
+      display: flex;
+      gap: 8px;
+    }
+    
+    .action{
+      flex: 1;
+      padding: 12px;
+      font-size: 13px;
+    }
+    
+    /* Teach/Forget panels */
+    .teach-panel{
+      margin-top: 12px;
+    }
+    
+    .teach-grid textarea{
+      font-size: 14px;
+      min-height: 80px;
+    }
+    
+    /* Footer text */
+    #theme-name, .footer-quote{
+      font-size: 11px;
+      padding: 4px;
+    }
+    
+    /* Make panels full-screen on mobile when open */
+    .teach-panel[aria-hidden="false"]{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      background: var(--panel);
+      border: none;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .pill{
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+  }
+  
+  /* Extra small phones */
+  @media (max-width: 480px){
+    .title-text{
+      font-size: 18px;
+    }
+    
+    .toolbar{
+      flex-wrap: wrap;
+    }
+    
+    .btn{
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+    
+    .msg{
+      font-size: 13px;
+      padding: 8px 12px;
+    }
   }
 </style>
 </head>
@@ -1475,5 +1627,4 @@ document.addEventListener('keydown', function(e){
 </script>
 </body>
 </html>
-
 
