@@ -1140,7 +1140,7 @@ function searchDocumentsForPhrase(phrase){
     addMsg("I didn't find that in the text documents I've loaded.","bot");
   } else {
     addMsg(
-      "Here are all the matching lines:\n" + hits.join("\n"),
+      "Found " + hits.length + " matching line(s):\n" + hits.join("\n"),
       "bot"
     );
   }
@@ -1475,4 +1475,5 @@ document.addEventListener('keydown', function(e){
 </script>
 </body>
 </html>
+
 
