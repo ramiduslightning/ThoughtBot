@@ -1127,21 +1127,11 @@ function searchDocumentsForPhrase(phrase){
     for (var i = 0; i < lines.length; i++){
       if (lines[i].toLowerCase().indexOf(needle) !== -1){
         var label = lines[i].trim();
-        var next = "";
-
-        for (var j = i + 1; j < lines.length; j++){
-          if (lines[j].trim()){
-            next = lines[j].trim();
-            break;
-          }
-        }
-
+        
+        // Only return the matching line, not the next line
         var lineText = (idx+1) + ". " + (doc.name || "document") + ": " + label;
-        if (next){
-          lineText += " — " + next;
-        }
         hits.push(lineText);
-        break;
+        // Don't break - find ALL matching lines in this document
       }
     }
   });
@@ -1150,7 +1140,7 @@ function searchDocumentsForPhrase(phrase){
     addMsg("I didn't find that in the text documents I've loaded.","bot");
   } else {
     addMsg(
-      "Here are some places I found that phrase:\n" + hits.join("\n"),
+      "Here are all the matching lines:\n" + hits.join("\n"),
       "bot"
     );
   }
