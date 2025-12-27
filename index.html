@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>ThoughtBot v37 (Gemini Golf)</title>
+<title>ThoughtBot</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
   /* ====== THEME VARIABLES (base: DARK) ====== */
@@ -1020,15 +1020,8 @@ function applyTheme(){
   setHeaderIcon(t);
 
   if (t==="gold"){
+    // Lightning effect only on theme switch (not repeating)
     triggerGoldLightning();
-    goldIntervalId = setInterval(function(){
-      if (TB_STATE.theme === "gold"){
-        triggerGoldLightning();
-      } else {
-        clearInterval(goldIntervalId);
-        goldIntervalId = null;
-      }
-    }, 45000);
   }
 }
 function cycleTheme(){
@@ -1462,8 +1455,34 @@ document.addEventListener("keydown", function(e){
 });
 
 initChat();
+
+/* ========================
+   Keyboard Shortcuts
+========================= */
+document.addEventListener('keydown', function(e){
+  // Ctrl/Cmd + Enter = Send message
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+    e.preventDefault();
+    sendMessage();
+  }
+  // Ctrl/Cmd + K = Clear chat
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k'){
+    e.preventDefault();
+    confirmClearChat();
+  }
+  // Ctrl/Cmd + E = Export knowledge
+  if ((e.ctrlKey || e.metaKey) && e.key === 'e'){
+    e.preventDefault();
+    exportKB();
+  }
+  // Ctrl/Cmd + T = Cycle theme
+  if ((e.ctrlKey || e.metaKey) && e.key === 't'){
+    e.preventDefault();
+    cycleTheme();
+  }
+});
+
 </script>
 </body>
 </html>
-
 
