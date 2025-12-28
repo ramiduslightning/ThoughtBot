@@ -904,7 +904,7 @@ var SOUNDS = {
     export: () => sweep(600, 900, 0.12, 'triangle'),
     import: () => sweep(400, 700, 0.08),
     upload: () => beep(150, 0.05),
-    theme: () => beep(440, 0.08)
+    theme: () => sweep(150, 500, 0.18, 'sine', 0.04)  // Long fade-in sweep - unique!
   },
   light: {
     send: () => beep(523, 0.08),
@@ -1308,7 +1308,7 @@ function cycleTheme(){
   TB_STATE.theme = THEME_ORDER[(i+1)%THEME_ORDER.length];
   saveState(TB_STATE);
   applyTheme();
-  playSound("theme");  // Play AFTER theme changes!
+  // No sound for theme changes
 }
 
 /* =========================
@@ -1624,11 +1624,12 @@ form.addEventListener("submit", function(e){
   handleUserText(val);
 });
 clearBtn.addEventListener("click", function(){
+  playSound('forget');  // Reuse forget sound (clearing/removing)
   chat.innerHTML="";
   addMsg("🧹 Chat cleared. How can I assist?","bot");
   input.focus();
 });
-themeBtn.addEventListener("click", function(){ playSound("theme"); cycleTheme(); });
+themeBtn.addEventListener("click", function(){ cycleTheme(); });
 
 openTeach.addEventListener("click", function(){ openPanel("teach"); });
 openForget.addEventListener("click", function(){ openPanel("forget"); });
@@ -1676,6 +1677,7 @@ forgetSave.addEventListener("click", function(e){
 
 brainBtn.addEventListener("click", function(e){
   e.preventDefault();
+  playSound('export');  // Reuse export sound (viewing data)
   showBrain();
 });
 
