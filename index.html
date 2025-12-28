@@ -60,7 +60,7 @@
     --panel-border: rgba(255,214,102,0.20);
     --right-bg: rgba(49, 34, 12, 0.78);
     --bot: rgba(255,214,102,0.14);
-    --user: #f59e0b;
+    --user: #fbbf24;
     --text: #fff7e3;
     --hairline: rgba(255,214,102,0.22);
     --button-fg: #1a1306;
@@ -853,6 +853,132 @@
          accept=".txt,.md,.csv,.json" />
 
 <script>
+/* ========================
+   SOUND SYSTEM
+========================= */
+var soundEnabled = true;
+
+function beep(freq, duration, type='sine', vol=0.08){
+  if(!soundEnabled) return;
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+    osc.start();
+    osc.stop(ctx.currentTime + duration);
+  }catch(e){}
+}
+
+function sweep(f1, f2, dur, type='sine', vol=0.08){
+  if(!soundEnabled) return;
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(f1, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(f2, ctx.currentTime + dur);
+    gain.gain.value = vol;
+    osc.start();
+    osc.stop(ctx.currentTime + dur);
+  }catch(e){}
+}
+
+function chord(freqs, dur, type='sine', vol=0.05){
+  if(!soundEnabled) return;
+  freqs.forEach(f => beep(f, dur, type, vol));
+}
+
+var SOUNDS = {
+  dark: {
+    send: () => sweep(200, 400, 0.05),
+    teach: () => beep(800, 0.08),
+    forget: () => sweep(600, 300, 0.06),
+    export: () => sweep(600, 900, 0.12, 'triangle'),
+    import: () => sweep(400, 700, 0.08),
+    upload: () => beep(150, 0.05),
+    theme: () => beep(440, 0.08)
+  },
+  light: {
+    send: () => beep(523, 0.08),
+    teach: () => chord([523, 659, 784], 0.05),
+    forget: () => sweep(700, 400, 0.05),
+    export: () => chord([440, 554, 659], 0.06),
+    import: () => sweep(300, 600, 0.08),
+    upload: () => beep(349, 0.05),
+    theme: () => beep(523, 0.08)
+  },
+  gold: {
+    send: () => sweep(1000, 500, 0.15, 'sawtooth', 0.08),
+    teach: () => { beep(1200, 0.1, 'square', 0.06); setTimeout(() => beep(1200, 0.05, 'square', 0.08), 100); },
+    forget: () => sweep(800, 200, 0.15, 'sawtooth', 0.06),
+    export: () => chord([300, 600], 0.12, 'square', 0.06),
+    import: () => chord([200, 400, 800], 0.15, 'square', 0.05),
+    upload: () => beep(100, 0.15, 'sawtooth', 0.08),
+    theme: () => chord([392, 523, 659], 0.06, 'square', 0.06)
+  },
+  blue: {
+    send: () => { beep(400, 0.05); setTimeout(() => beep(800, 0.05), 50); setTimeout(() => beep(400, 0.05), 100); },
+    teach: () => beep(1000, 0.08),
+    forget: () => sweep(800, 400, 0.05),
+    export: () => sweep(300, 700, 0.08),
+    import: () => { beep(600, 0.05); setTimeout(() => beep(800, 0.05), 60); setTimeout(() => beep(1000, 0.05), 120); },
+    upload: () => beep(250, 0.05),
+    theme: () => chord([523, 659, 784, 1047], 0.05)
+  },
+  green: {
+    send: () => beep(440, 0.1, 'square'),
+    teach: () => { beep(880, 0.06, 'square'); setTimeout(() => beep(440, 0.06, 'square'), 60); },
+    forget: () => sweep(600, 200, 0.12, 'square'),
+    export: () => { beep(1047, 0.04, 'square'); setTimeout(() => beep(1319, 0.04, 'square'), 40); },
+    import: () => { beep(261, 0.08, 'square'); setTimeout(() => beep(523, 0.08, 'square'), 80); },
+    upload: () => beep(330, 0.1, 'square'),
+    theme: () => { beep(523, 0.05, 'square'); setTimeout(() => beep(659, 0.05, 'square'), 50); setTimeout(() => beep(784, 0.05, 'square'), 100); }
+  },
+  pink: {
+    send: () => { beep(1500, 0.06); setTimeout(() => beep(2000, 0.06), 60); },
+    teach: () => beep(800, 0.08),
+    forget: () => sweep(1000, 500, 0.05),
+    export: () => { beep(1200, 0.05); setTimeout(() => beep(1400, 0.05), 40); setTimeout(() => beep(1600, 0.05), 80); },
+    import: () => chord([800, 1000, 1200], 0.06),
+    upload: () => beep(400, 0.05),
+    theme: () => chord([659, 784, 988, 1319], 0.05)
+  },
+  gobot: {
+    send: () => { beep(200, 0.05, 'square'); setTimeout(() => beep(250, 0.05, 'square'), 50); setTimeout(() => beep(200, 0.05, 'square'), 100); },
+    teach: () => chord([200, 400], 0.1, 'square'),
+    forget: () => sweep(400, 150, 0.12, 'square'),
+    export: () => sweep(100, 800, 0.2, 'sawtooth'),
+    import: () => { beep(300, 0.08, 'square'); setTimeout(() => beep(320, 0.08, 'square'), 40); setTimeout(() => beep(300, 0.08, 'square'), 80); },
+    upload: () => beep(150, 0.12, 'square'),
+    theme: () => chord([110, 220, 440], 0.12, 'square')
+  }
+};
+
+function playSound(action){
+  var theme = TB_STATE.theme || 'dark';
+  var fn = SOUNDS[theme] && SOUNDS[theme][action];
+  if(fn) fn();
+}
+
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  var btn = document.getElementById('snd');
+  if(btn) btn.textContent = soundEnabled ? '🔊' : '🔇';
+  localStorage.setItem('tb_snd', soundEnabled);
+}
+
+var saved = localStorage.getItem('tb_snd');
+if(saved !== null) soundEnabled = saved === 'true';
+
+
 /* =========================
    Persistent State
 ========================= */
@@ -1182,6 +1308,7 @@ function cycleTheme(){
   TB_STATE.theme = THEME_ORDER[(i+1)%THEME_ORDER.length];
   saveState(TB_STATE);
   applyTheme();
+  playSound("theme");  // Play AFTER theme changes!
 }
 
 /* =========================
@@ -1490,6 +1617,7 @@ function initChat(){
 
 form.addEventListener("submit", function(e){
   e.preventDefault();
+  playSound('send');
   var val = input.value;
   input.value = "";
   addMsg(val,"user");
@@ -1500,7 +1628,7 @@ clearBtn.addEventListener("click", function(){
   addMsg("🧹 Chat cleared. How can I assist?","bot");
   input.focus();
 });
-themeBtn.addEventListener("click", function(){ cycleTheme(); });
+themeBtn.addEventListener("click", function(){ playSound("theme"); cycleTheme(); });
 
 openTeach.addEventListener("click", function(){ openPanel("teach"); });
 openForget.addEventListener("click", function(){ openPanel("forget"); });
@@ -1508,6 +1636,7 @@ panelClose.addEventListener("click", function(){ closePanel(); });
 
 teachSave.addEventListener("click", function(e){
   e.preventDefault();
+  playSound('teach');
   // Teach inputs are now textareas
   var L = teachLeft.value.trim();
   var R = teachRight.value.trim();
@@ -1523,6 +1652,7 @@ teachSave.addEventListener("click", function(e){
 });
 forgetSave.addEventListener("click", function(e){
   e.preventDefault();
+  playSound("forget");
   // Teach input is now a textarea
   var L = teachLeft.value.trim();
   if (!L){
@@ -1551,15 +1681,18 @@ brainBtn.addEventListener("click", function(e){
 
 openExport.addEventListener("click", function(e){
   e.preventDefault();
+  playSound("export");
   exportMemory();
 });
 openImport.addEventListener("click", function(e){
   e.preventDefault();
+  playSound("import");
   importMemory();
 });
 
 uploadTrigger.addEventListener("click", function(e){
   e.preventDefault();
+  playSound("upload");
   uploadInput.click();
 });
 uploadInput.addEventListener("change", function(e){
